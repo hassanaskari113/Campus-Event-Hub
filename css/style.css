@@ -852,3 +852,120 @@ body {
   background: var(--accent);
   border-radius: 10px;
 }
+
+/* ---------- Societies Accordion ---------- */
+.societies-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem 2rem 6rem;
+}
+
+.societies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.society-item {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.society-item.open {
+  border-color: var(--accent-glow);
+}
+
+.society-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.3rem 1.5rem;
+  cursor: pointer;
+}
+
+.society-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.society-info {
+  flex-grow: 1;
+}
+
+.society-info h3 {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+.society-info p {
+  color: #999;
+  font-size: 0.85rem;
+}
+
+.society-arrow {
+  color: var(--accent-glow);
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.society-item.open .society-arrow {
+  transform: rotate(180deg);
+}
+
+.society-events {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.society-item.open .society-events {
+  max-height: 600px;
+}
+
+.society-events-inner {
+  padding: 0 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 1.2rem;
+}
+
+.society-event-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: background 0.25s ease;
+}
+
+.society-event-row:hover {
+  background: rgba(111, 75, 255, 0.12);
+}
+
+.society-event-row h4 {
+  color: #fff;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+
+.society-event-row span {
+  color: #999;
+  font-size: 0.78rem;
+}
+
+.no-events-text {
+  color: #777;
+  font-size: 0.85rem;
+  font-style: italic;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--glass-border);
+}

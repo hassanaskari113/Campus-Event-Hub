@@ -70,6 +70,40 @@ const events = [
   },
 ];
 
+// ---------- Societies Data ----------
+const societies = [
+  {
+    name: "Computer Science Society",
+    icon: "💻",
+    description:
+      "For students passionate about programming, tech talks, and hackathons.",
+  },
+  {
+    name: "Debating Society",
+    icon: "🎤",
+    description:
+      "Sharpening argumentation, public speaking, and critical thinking skills.",
+  },
+  {
+    name: "Robotics Club",
+    icon: "🤖",
+    description:
+      "Building and competing with robots, from beginner kits to custom builds.",
+  },
+  {
+    name: "Photography Society",
+    icon: "📷",
+    description:
+      "Capturing campus life and honing the craft of visual storytelling.",
+  },
+  {
+    name: "Entrepreneurship Society",
+    icon: "🚀",
+    description:
+      "Connecting student founders with mentors, funding, and pitch opportunities.",
+  },
+];
+
 // ---------- Helper: format date nicely ----------
 function formatDate(dateStr) {
   const date = new Date(dateStr);
@@ -466,3 +500,72 @@ if (registrationForm) {
     }
   });
 }
+
+// ---------- Render Societies Accordion ----------
+function renderSocietiesList() {
+  const list = document.getElementById("societiesList");
+  if (!list) return; // only run on societies.html
+
+  list.innerHTML = societies
+    .map((society, index) => {
+      // Find all events belonging to this society
+      const societyEvents = events.filter(
+        (event) => event.society === society.name,
+      );
+
+      const eventsHTML =
+        societyEvents.length > 0
+          ? societyEvents
+              .map(
+                (event) => `
+          <div class="society-event-row" data-id="${event.id}">
+            <div>
+              <h4>${event.title}</h4>
+              <span>${formatDate(event.date)} • ${event.time}</span>
+            </div>
+            <span>›</span>
+          </div>
+        `,
+              )
+              .join("")
+          : `<p class="no-events-text">No upcoming events from this society right now.</p>`;
+
+      return `
+      <div class="society-item" data-index="${index}">
+        <div class="society-header">
+          <span class="society-icon">${society.icon}</span>
+          <div class="society-info">
+            <h3>${society.name}</h3>
+            <p>${society.description}</p>
+          </div>
+          <span class="society-arrow">▾</span>
+        </div>
+        <div class="society-events">
+          <div class="society-events-inner">
+            ${eventsHTML}
+          </div>
+        </div>
+      </div>
+    `;
+    })
+    .join("");
+
+  // Toggle accordion open/close on header click
+  list.querySelectorAll(".society-item").forEach((item) => {
+    const header = item.querySelector(".society-header");
+    header.addEventListener("click", () => {
+      item.classList.toggle("open");
+    });
+  });
+
+  // Clicking an event row opens the shared modal (reusing openEventModal from events page logic)
+  list.querySelectorAll(".society-event-row").forEach((row) => {
+    row.addEventListener("click", (e) => {
+      e.stopPropagation(); // prevent this click from also toggling the accordion closed
+      const eventId = parseInt(row.dataset.id);
+      openEventModal(eventId);
+    });
+  });
+}
+
+renderSocietiesList();
