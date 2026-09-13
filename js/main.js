@@ -184,6 +184,24 @@ if (filterButtons) {
       renderEventsGrid();
     });
   });
+
+  // Check the URL for a ?category=... parameter (e.g. coming from Home page category cards)
+  const urlParams = new URLSearchParams(window.location.search);
+  const categoryFromURL = urlParams.get("category");
+
+  if (categoryFromURL) {
+    const matchingBtn = filterButtons.querySelector(
+      `[data-category="${categoryFromURL}"]`,
+    );
+    if (matchingBtn) {
+      // Simulate clicking that filter button so everything (active state + rendering) stays in sync
+      filterButtons
+        .querySelectorAll(".filter-btn")
+        .forEach((b) => b.classList.remove("active"));
+      matchingBtn.classList.add("active");
+      currentCategory = categoryFromURL;
+    }
+  }
 }
 
 // ---------- Live Search ----------
