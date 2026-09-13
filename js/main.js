@@ -285,19 +285,63 @@ if (registrationForm) {
   );
   let regCountdownInterval = null;
 
-  // Populate dropdown from our events array so it always stays in sync
+  // ---------- Custom Dropdown Logic ----------
+  const customSelect = document.getElementById("customSelect");
+  const customSelectTrigger = document.getElementById("customSelectTrigger");
+  const customSelectOptions = document.getElementById("customSelectOptions");
+  const customSelectLabel = document.getElementById("customSelectLabel");
+
+  // Populate custom dropdown options from our events array
   events.forEach((event) => {
-    const option = document.createElement("option");
-    option.value = event.id;
-    option.textContent = `${event.title} — ${formatDate(event.date)}`;
-    eventSelect.appendChild(option);
+    const optionEl = document.createElement("div");
+    optionEl.classList.add("custom-option");
+    optionEl.dataset.value = event.id;
+    optionEl.textContent = `${event.title} — ${formatDate(event.date)}`;
+    customSelectOptions.appendChild(optionEl);
   });
 
-  // Show live countdown when user picks an event
-  eventSelect.addEventListener("change", () => {
+  // Open/close the dropdown when trigger is clicked
+  customSelectTrigger.addEventListener("click", () => {
+    customSelect.classList.toggle("open");
+  });
+
+  // Close dropdown if user clicks anywhere outside it
+  document.addEventListener("click", (e) => {
+    if (!customSelect.contains(e.target)) {
+      customSelect.classList.remove("open");
+    }
+  });
+
+  // Handle selecting an option
+  customSelectOptions.querySelectorAll(".custom-option").forEach((optionEl) => {
+    optionEl.addEventListener("click", () => {
+      const selectedId = optionEl.dataset.value;
+
+      // Update the hidden real input (this is what validation logic reads)
+      eventSelect.value = selectedId;
+
+      // Update visible label and mark it as "has a value" for styling
+      customSelectLabel.textContent = optionEl.textContent;
+      customSelectTrigger.classList.add("has-value");
+
+      // Highlight the selected option, remove highlight from others
+      customSelectOptions
+        .querySelectorAll(".custom-option")
+        .forEach((o) => o.classList.remove("selected"));
+      optionEl.classList.add("selected");
+
+      // Close the dropdown
+      customSelect.classList.remove("open");
+
+      // Trigger the countdown logic (same as before, just called manually now)
+      handleEventSelection(selectedId);
+    });
+  });
+
+  function handleEventSelection(selectedIdRaw) {
     clearInterval(regCountdownInterval);
 
-    const selectedId = parseInt(eventSelect.value);
+    const selectedId = parseInt(selectedIdRaw);
     const selectedEvent = events.find((e) => e.id === selectedId);
 
     if (!selectedEvent) {
@@ -328,7 +372,7 @@ if (registrationForm) {
 
     updateRegCountdown();
     regCountdownInterval = setInterval(updateRegCountdown, 1000);
-  });
+  }
 
   // ---------- Validation Helpers ----------
   function showError(inputEl, errorEl, message) {

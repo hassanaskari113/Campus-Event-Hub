@@ -742,3 +742,113 @@ body {
   font-weight: 600;
   font-size: 0.9rem;
 }
+
+/* ---------- Custom Dropdown ---------- */
+.custom-select {
+  position: relative;
+}
+
+.custom-select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  text-align: left;
+}
+
+.custom-select-trigger:hover,
+.custom-select.open .custom-select-trigger {
+  border-color: var(--accent-glow);
+}
+
+#customSelectLabel {
+  color: #ccc;
+}
+
+.custom-select-trigger.has-value #customSelectLabel {
+  color: #fff;
+}
+
+.custom-select-arrow {
+  color: var(--accent-glow);
+  transition: transform 0.3s ease;
+  font-size: 0.8rem;
+}
+
+.custom-select.open .custom-select-arrow {
+  transform: rotate(180deg);
+}
+
+.custom-select-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #14141f;
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition:
+    max-height 0.3s ease,
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  z-index: 50;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.custom-select.open .custom-select-options {
+  max-height: 260px;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  overflow-y: auto;
+}
+
+.custom-option {
+  padding: 0.8rem 1rem;
+  font-size: 0.9rem;
+  color: #ccc;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.custom-option:last-child {
+  border-bottom: none;
+}
+
+.custom-option:hover {
+  background: rgba(111, 75, 255, 0.15);
+  color: #fff;
+}
+
+.custom-option.selected {
+  background: rgba(111, 75, 255, 0.25);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Scrollbar styling for the options list, since it can get tall */
+.custom-select-options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 10px;
+}

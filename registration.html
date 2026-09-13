@@ -70,9 +70,24 @@
 
           <div class="form-group">
             <label for="eventSelect">Select Event</label>
-            <select id="eventSelect" name="eventSelect">
-              <option value="">-- Choose an event --</option>
-            </select>
+
+            <div class="custom-select" id="customSelect">
+              <button
+                type="button"
+                class="custom-select-trigger"
+                id="customSelectTrigger"
+              >
+                <span id="customSelectLabel">-- Choose an event --</span>
+                <span class="custom-select-arrow">▾</span>
+              </button>
+              <div class="custom-select-options" id="customSelectOptions">
+                <!-- Options injected by JS -->
+              </div>
+            </div>
+
+            <!-- Hidden real input that holds the actual selected value for validation/logic -->
+            <input type="hidden" id="eventSelect" name="eventSelect" value="" />
+
             <span class="error-message" id="eventSelectError"></span>
           </div>
 
