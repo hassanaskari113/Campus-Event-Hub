@@ -569,3 +569,141 @@ function renderSocietiesList() {
 }
 
 renderSocietiesList();
+
+// ---------- Calendar Logic ----------
+const calendarGrid = document.getElementById("calendarGrid");
+
+if (calendarGrid) {
+  const calendarMonthLabel = document.getElementById("calendarMonthLabel");
+  const calendarDayEvents = document.getElementById("calendarDayEvents");
+  const prevMonthBtn = document.getElementById("prevMonthBtn");
+  const nextMonthBtn = document.getElementById("nextMonthBtn");
+
+  // Start on the month of our first event so users see something immediately
+  let currentViewDate = new Date(events[0].date);
+  currentViewDate.setDate(1); // always track the 1st of the month to avoid month-rollover bugs
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  function renderCalendar() {
+    const year = currentViewDate.getFullYear();
+    const month = currentViewDate.getMonth();
+
+    calendarMonthLabel.textContent = `${monthNames[month]} ${year}`;
+
+    const firstDayOfMonth = new Date(year, month, 1);
+    const startingWeekday = firstDayOfMonth.getDay(); // 0 = Sunday
+    const daysInMonth = new Date(year, month + 1, 0).getDate(); // trick: day 0 of next month = last day of this month
+
+    // Build a lookup of which days in THIS month have events
+    // Format each event date as YYYY-MM-DD string for easy matching
+    const eventsThisMonth = events.filter((event) => {
+      const eventDate = new Date(event.date);
+      return eventDate.getFullYear() === year && eventDate.getMonth() === month;
+    });
+
+    const eventDaysMap = {}; // { dayNumber: [event, event, ...] }
+    eventsThisMonth.forEach((event) => {
+      const day = new Date(event.date).getDate();
+      if (!eventDaysMap[day]) eventDaysMap[day] = [];
+      eventDaysMap[day].push(event);
+    });
+
+    let cellsHTML = "";
+
+    // Empty filler cells before day 1 (so day 1 lands on the correct weekday column)
+    for (let i = 0; i < startingWeekday; i++) {
+      cellsHTML += `<div class="calendar-day empty"></div>`;
+    }
+
+    // Actual day cells
+    const today = new Date();
+    for (let day = 1; day <= daysInMonth; day++) {
+      const hasEvent = eventDaysMap[day] !== undefined;
+      const isToday =
+        day === today.getDate() &&
+        month === today.getMonth() &&
+        year === today.getFullYear();
+
+      let classes = "calendar-day";
+      if (hasEvent) classes += " has-event";
+      if (isToday) classes += " today";
+
+      cellsHTML += `<div class="${classes}" data-day="${day}">${day}</div>`;
+    }
+
+    calendarGrid.innerHTML = cellsHTML;
+
+    // Attach click listeners only to days that actually have events
+    calendarGrid.querySelectorAll(".calendar-day.has-event").forEach((cell) => {
+      cell.addEventListener("click", () => {
+        // Remove "selected" from all days, add to the clicked one
+        calendarGrid
+          .querySelectorAll(".calendar-day")
+          .forEach((c) => c.classList.remove("selected"));
+        cell.classList.add("selected");
+
+        const day = parseInt(cell.dataset.day);
+        showDayEvents(eventDaysMap[day], day);
+      });
+    });
+
+    // Reset the day-events panel when switching months
+    calendarDayEvents.innerHTML = `<p class="no-events-text">Select a highlighted day to see its events.</p>`;
+  }
+
+  function showDayEvents(dayEvents, day) {
+    const monthLabel = monthNames[currentViewDate.getMonth()];
+
+    calendarDayEvents.innerHTML = `
+      <h3>Events on ${monthLabel} ${day}</h3>
+      ${dayEvents
+        .map(
+          (event) => `
+        <div class="society-event-row" data-id="${event.id}">
+          <div>
+            <h4>${event.title}</h4>
+            <span>${event.time} • ${event.venue}</span>
+          </div>
+          <span>›</span>
+        </div>
+      `,
+        )
+        .join("")}
+    `;
+
+    // Reuse the shared modal when an event row is clicked
+    calendarDayEvents.querySelectorAll(".society-event-row").forEach((row) => {
+      row.addEventListener("click", () => {
+        const eventId = parseInt(row.dataset.id);
+        openEventModal(eventId);
+      });
+    });
+  }
+
+  // Month navigation
+  prevMonthBtn.addEventListener("click", () => {
+    currentViewDate.setMonth(currentViewDate.getMonth() - 1);
+    renderCalendar();
+  });
+
+  nextMonthBtn.addEventListener("click", () => {
+    currentViewDate.setMonth(currentViewDate.getMonth() + 1);
+    renderCalendar();
+  });
+
+  renderCalendar();
+}
