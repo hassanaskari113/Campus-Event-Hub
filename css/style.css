@@ -5,6 +5,10 @@
   box-sizing: border-box;
 }
 
+html {
+  min-height: 60%;
+}
+
 body {
   font-family: "Segoe UI", "Poppins", sans-serif;
   background-color: #0a0a12;
@@ -26,7 +30,13 @@ body {
     );
   background-attachment: fixed;
   color: #e0e0e0;
-  min-height: 100vh;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 /* ---------- Color Variables ---------- */
@@ -142,7 +152,7 @@ body {
 .footer {
   background: rgba(255, 255, 255, 0.03);
   border-top: 1px solid var(--glass-border);
-  margin-top: 6rem;
+  margin-top: 17rem;
   padding: 2rem;
 }
 
@@ -553,21 +563,27 @@ body {
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(6px);
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  visibility: hidden;
-  transition:
-    opacity 0.3s ease,
-    visibility 0.3s ease;
   z-index: 1000;
   padding: 1rem;
 }
 
 .modal-overlay.active {
+  display: flex;
   opacity: 1;
-  visibility: visible;
+  animation: fadeInModal 0.3s ease forwards;
+}
+
+@keyframes fadeInModal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modal {
@@ -974,7 +990,7 @@ body {
 .calendar-section {
   max-width: 800px;
   margin: 0 auto;
-  padding: 1rem 2rem 6rem;
+  padding: 1rem 2rem 3rem;
 }
 
 .calendar-controls {
@@ -1123,6 +1139,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+  min-height: 100px;
 }
 
 .calendar-day-events h3 {
