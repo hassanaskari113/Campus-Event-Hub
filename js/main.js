@@ -274,3 +274,151 @@ navLinks.querySelectorAll("a").forEach((link) => {
     hamburgerBtn.classList.remove("open");
   });
 });
+
+// ---------- Registration Page ----------
+const registrationForm = document.getElementById("registrationForm");
+
+if (registrationForm) {
+  const eventSelect = document.getElementById("eventSelect");
+  const registrationCountdown = document.getElementById(
+    "registrationCountdown",
+  );
+  let regCountdownInterval = null;
+
+  // Populate dropdown from our events array so it always stays in sync
+  events.forEach((event) => {
+    const option = document.createElement("option");
+    option.value = event.id;
+    option.textContent = `${event.title} — ${formatDate(event.date)}`;
+    eventSelect.appendChild(option);
+  });
+
+  // Show live countdown when user picks an event
+  eventSelect.addEventListener("change", () => {
+    clearInterval(regCountdownInterval);
+
+    const selectedId = parseInt(eventSelect.value);
+    const selectedEvent = events.find((e) => e.id === selectedId);
+
+    if (!selectedEvent) {
+      registrationCountdown.style.display = "none";
+      return;
+    }
+
+    registrationCountdown.style.display = "block";
+    const targetDate = new Date(`${selectedEvent.date} ${selectedEvent.time}`);
+
+    function updateRegCountdown() {
+      const now = new Date();
+      const diff = targetDate - now;
+
+      if (diff <= 0) {
+        registrationCountdown.textContent = "This event has already started.";
+        clearInterval(regCountdownInterval);
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      registrationCountdown.textContent = `⏳ ${days}d ${hours}h ${minutes}m ${seconds}s until "${selectedEvent.title}"`;
+    }
+
+    updateRegCountdown();
+    regCountdownInterval = setInterval(updateRegCountdown, 1000);
+  });
+
+  // ---------- Validation Helpers ----------
+  function showError(inputEl, errorEl, message) {
+    inputEl.classList.add("invalid");
+    errorEl.textContent = message;
+  }
+
+  function clearError(inputEl, errorEl) {
+    inputEl.classList.remove("invalid");
+    errorEl.textContent = "";
+  }
+
+  function isValidEmail(email) {
+    // Basic email pattern: something@something.something
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return pattern.test(email);
+  }
+
+  function isValidRollNo(rollNo) {
+    // Format: B + (CS|SE|IT|AI|DS) + F + 2 digits (year) + (M or A) + 3 digits
+    // Example: BCSF24M029
+    const pattern = /^B(CS|SE|IT|AI|DS)F\d{2}[MA]\d{3}$/;
+    return pattern.test(rollNo.trim().toUpperCase());
+  }
+
+  // ---------- Form Submit Validation ----------
+  registrationForm.addEventListener("submit", (e) => {
+    e.preventDefault(); // stop the page from reloading (default form behavior)
+
+    let isValid = true;
+
+    const fullName = document.getElementById("fullName");
+    const fullNameError = document.getElementById("fullNameError");
+    if (fullName.value.trim() === "") {
+      showError(fullName, fullNameError, "Full name is required.");
+      isValid = false;
+    } else {
+      clearError(fullName, fullNameError);
+    }
+
+    const email = document.getElementById("email");
+    const emailError = document.getElementById("emailError");
+    if (email.value.trim() === "") {
+      showError(email, emailError, "Email is required.");
+      isValid = false;
+    } else if (!isValidEmail(email.value.trim())) {
+      showError(email, emailError, "Please enter a valid email address.");
+      isValid = false;
+    } else {
+      clearError(email, emailError);
+    }
+
+    const rollNo = document.getElementById("rollNo");
+    const rollNoError = document.getElementById("rollNoError");
+    if (rollNo.value.trim() === "") {
+      showError(rollNo, rollNoError, "Roll number is required.");
+      isValid = false;
+    } else if (!isValidRollNo(rollNo.value)) {
+      showError(
+        rollNo,
+        rollNoError,
+        "Format must be like BCSF24M029 (B + CS/SE/IT/AI/DS + F + year + M/A + 3-digit number).",
+      );
+      isValid = false;
+    } else {
+      clearError(rollNo, rollNoError);
+    }
+
+    const eventSelectError = document.getElementById("eventSelectError");
+    if (eventSelect.value === "") {
+      showError(eventSelect, eventSelectError, "Please select an event.");
+      isValid = false;
+    } else {
+      clearError(eventSelect, eventSelectError);
+    }
+
+    const successMessage = document.getElementById("successMessage");
+
+    if (isValid) {
+      successMessage.style.display = "block";
+      registrationForm.reset();
+      registrationCountdown.style.display = "none";
+      clearInterval(regCountdownInterval);
+
+      // Hide success message after a few seconds
+      setTimeout(() => {
+        successMessage.style.display = "none";
+      }, 4000);
+    } else {
+      successMessage.style.display = "none";
+    }
+  });
+}

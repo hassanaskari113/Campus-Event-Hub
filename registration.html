@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - Campus Event Hub</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="index.html" class="logo">Campus<span>Hub</span></a>
+
+        <nav class="nav-links" id="navLinks">
+          <a href="index.html">Home</a>
+          <a href="events.html">Events</a>
+          <a href="calendar.html">Calendar</a>
+          <a href="societies.html">Societies</a>
+          <a href="registration.html">Register</a>
+        </nav>
+
+        <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-header">
+        <h1>Register for an Event</h1>
+        <p>Fill out the form below to secure your spot.</p>
+      </section>
+
+      <section class="registration-section">
+        <form id="registrationForm" class="registration-form" novalidate>
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              placeholder="e.g. Ahmed Khan"
+            />
+            <span class="error-message" id="fullNameError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="e.g. ahmed@university.edu.pk"
+            />
+            <span class="error-message" id="emailError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="rollNo">Roll Number</label>
+            <input
+              type="text"
+              id="rollNo"
+              name="rollNo"
+              placeholder="e.g. BCSF24M029"
+            />
+            <span class="error-message" id="rollNoError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="eventSelect">Select Event</label>
+            <select id="eventSelect" name="eventSelect">
+              <option value="">-- Choose an event --</option>
+            </select>
+            <span class="error-message" id="eventSelectError"></span>
+          </div>
+
+          <div
+            class="countdown-box"
+            id="registrationCountdown"
+            style="display: none"
+          ></div>
+
+          <button type="submit" class="btn-primary submit-btn">
+            Confirm Registration
+          </button>
+
+          <div
+            class="success-message"
+            id="successMessage"
+            style="display: none"
+          >
+            ✅ You're registered! A confirmation has been noted.
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-container">
+        <p>&copy; 2026 Campus Event Hub. All rights reserved.</p>
+        <div class="footer-links">
+          <a href="#">Instagram</a>
+          <a href="#">WhatsApp Group</a>
+          <a href="mailto:campushub@example.com">Email Us</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+  </body>
+</html>
